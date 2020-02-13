@@ -1,8 +1,11 @@
 let start = () =>
 {
+    enterWordsInput.value = '';
     enterWordsInput.removeAttribute('disabled');
+
     correctWordsCount.textContent = 0;
     incorrectWordsCount.textContent = 0;
+
     milliseconds = defaultMilliseconds;
     interval = setInterval(decrementTime, 1000);
 }
@@ -23,8 +26,7 @@ let getWords = async (event) =>
     reader.addEventListener('load', () =>
     {
         let words = reader.result;
-
-        wordsArray = words.split(' ');
+        let wordsArray = words.split(' ');
 
         wordsArray.forEach((word) =>
         {
@@ -34,6 +36,16 @@ let getWords = async (event) =>
         });
         
         wordsDiv.querySelector('p').classList.add('highlight');
+
+        if (!document.querySelector('#start'))
+        {
+            let startButton = document.createElement('button');
+            startButton.setAttribute('id', 'start');
+            startButton.textContent = 'Начать';
+            document.body.insertAdjacentElement('beforeEnd', startButton);
+            
+            startButton.addEventListener('click', start);
+        }
     });
 }
 
@@ -61,13 +73,11 @@ let checkInput = (event) =>
     {
         if (isFullWordIncorrect)
         {
-            console.log('incorrect');
             let incorrectWordsCountInt = parseInt(incorrectWordsCount.textContent);
             incorrectWordsCount.textContent = ++incorrectWordsCountInt;
         }
         else
         {
-            console.log('correct');
             let correctWordsCountInt = parseInt(correctWordsCount.textContent);
             correctWordsCount.textContent = ++correctWordsCountInt;
         }
@@ -81,14 +91,24 @@ let checkInput = (event) =>
 let decrementTime = () =>
 {
     milliseconds -= 1000;
+
     if (milliseconds === 0)
     {
         clearInterval(interval);
         enterWordsInput.setAttribute('disabled', '');
     }
+
     let minutes = Math.floor(milliseconds / 1000 / 60);
     let seconds = milliseconds / 1000 % 60;
-    timeSpan.textContent = `${minutes}:${seconds}`;
+
+    if (seconds + 1 > 10)
+    {
+        timeSpan.textContent = `${minutes}:${seconds}`;
+    }
+    else
+    {
+        timeSpan.textContent = `${minutes}:0${seconds}`;
+    }
 }
 
 let wordsDiv = document.querySelector('#words');
@@ -102,8 +122,6 @@ const defaultMilliseconds = (1 * 60 + 30) * 1000; // minutes * seconds * millise
 let milliseconds = defaultMilliseconds; 
 let interval;
 
-let wordsArray = [];
-
 textFileInput.addEventListener('input', (event) =>
 {
     getWords(event);
@@ -112,4 +130,3 @@ enterWordsInput.addEventListener('input', (event) =>
 {
     checkInput(event);
 });
-startButton.addEventListener('click', start);

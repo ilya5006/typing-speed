@@ -24,6 +24,9 @@ body
 {
     width: 500px;
     height: 50px;
+
+    margin-top: 10px;
+
     background-color: #ededed;
     overflow: hidden;
 }
@@ -42,6 +45,11 @@ body
 #enter_words
 {
     width: 500px;
+}
+
+#text_file_input
+{
+    margin-top: 10px;
 }
 
 .uncorrect_word

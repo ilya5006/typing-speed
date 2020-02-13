@@ -118,7 +118,7 @@ let correctWordsCount = document.querySelector('#correct_words_count');
 let incorrectWordsCount = document.querySelector('#incorrect_words_count');
 let startButton = document.querySelector('#start');
 let timeSpan = document.querySelector('#time');
-const defaultMilliseconds = (1 * 60 + 30) * 1000; // minutes * seconds * milliseconds 
+const defaultMilliseconds = 90 * 1000; // 1 minute 30 seconds
 let milliseconds = defaultMilliseconds; 
 let interval;
 

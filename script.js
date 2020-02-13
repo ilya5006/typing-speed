@@ -14,9 +14,9 @@ let getWords = async (event) =>
     {
         let words = reader.result;
 
-        words = words.split(' ');
+        wordsArray = words.split(' ');
 
-        words.forEach((word) =>
+        wordsArray.forEach((word) =>
         {
             let p = document.createElement('p');
             p.textContent = word;
@@ -24,17 +24,46 @@ let getWords = async (event) =>
         });
         
         wordsDiv.querySelector('p').classList.add('highlight');
+
+        enterWordsInput.removeAttribute('disabled');
     });
 }
 
 let checkInput = (event) =>
 {
-    
+    let inputText = event.target
+    let inputTextValue = inputText.value;
+    let highlightWord = document.querySelector('.highlight');
+
+    let isIncorrectWord = highlightWord.textContent.indexOf(inputTextValue.trim()) === -1;
+
+    let isFullWord = inputTextValue[inputTextValue.length - 1] === ' ';
+
+    if (isIncorrectWord)
+    {
+        highlightWord.classList.add('uncorrect_word');
+    }
+    else
+    {
+        highlightWord.classList.remove('uncorrect_word');
+    }
+
+    if (isFullWord)
+    {
+        if (!isIncorrectWord)
+        {
+            highlightWord.remove();
+            wordsDiv.querySelector('p').classList.add('highlight');
+            inputText.value = '';
+        }
+    }
+
 }
 
 let wordsDiv = document.querySelector('#words');
 let textFileInput = document.querySelector('#text_file_input');
 let enterWordsInput = document.querySelector('#enter_words');
+let wordsArray = [];
 
 textFileInput.addEventListener('input', (event) =>
 {

@@ -8,6 +8,7 @@ let getWords = async (event) =>
     if (file.type !== 'text/plain')
     {
         alert('Загружать можно только текстовый файл!');
+        return;
     }
 
     reader.addEventListener('load', () =>
@@ -31,13 +32,14 @@ let getWords = async (event) =>
 
 let checkInput = (event) =>
 {
-    let inputText = event.target
+    let inputText = event.target;
     let inputTextValue = inputText.value;
     let highlightWord = document.querySelector('.highlight');
 
-    let isIncorrectWord = highlightWord.textContent.indexOf(inputTextValue.trim()) === -1;
+    let isIncorrectWord = highlightWord.textContent.indexOf(inputTextValue.trim()) !== 0;
 
     let isFullWord = inputTextValue[inputTextValue.length - 1] === ' ';
+    let isFullWordIncorrect = highlightWord.textContent !== inputTextValue.trim();
 
     if (isIncorrectWord)
     {
@@ -50,12 +52,22 @@ let checkInput = (event) =>
 
     if (isFullWord)
     {
-        if (!isIncorrectWord)
+        if (isFullWordIncorrect)
         {
-            highlightWord.remove();
-            wordsDiv.querySelector('p').classList.add('highlight');
-            inputText.value = '';
+            console.log('incorrect');
+            let incorrectWordsCountInt = parseInt(incorrectWordsCount.textContent);
+            incorrectWordsCount.textContent = ++incorrectWordsCountInt;
         }
+        else
+        {
+            console.log('correct');
+            let correctWordsCountInt = parseInt(correctWordsCount.textContent);
+            correctWordsCount.textContent = ++correctWordsCountInt;
+        }
+
+        highlightWord.remove();
+        wordsDiv.querySelector('p').classList.add('highlight');
+        inputText.value = '';
     }
 
 }
@@ -63,7 +75,11 @@ let checkInput = (event) =>
 let wordsDiv = document.querySelector('#words');
 let textFileInput = document.querySelector('#text_file_input');
 let enterWordsInput = document.querySelector('#enter_words');
+let correctWordsCount = document.querySelector('#correct_words_count');
+let incorrectWordsCount = document.querySelector('#incorrect_words_count');
+
 let wordsArray = [];
+
 
 textFileInput.addEventListener('input', (event) =>
 {

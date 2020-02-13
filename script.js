@@ -1,3 +1,12 @@
+let start = () =>
+{
+    enterWordsInput.removeAttribute('disabled');
+    correctWordsCount.textContent = 0;
+    incorrectWordsCount.textContent = 0;
+    milliseconds = defaultMilliseconds;
+    interval = setInterval(decrementTime, 1000);
+}
+
 let getWords = async (event) =>
 {
     let reader = new FileReader();
@@ -25,8 +34,6 @@ let getWords = async (event) =>
         });
         
         wordsDiv.querySelector('p').classList.add('highlight');
-
-        enterWordsInput.removeAttribute('disabled');
     });
 }
 
@@ -69,7 +76,19 @@ let checkInput = (event) =>
         wordsDiv.querySelector('p').classList.add('highlight');
         inputText.value = '';
     }
+}
 
+let decrementTime = () =>
+{
+    milliseconds -= 1000;
+    if (milliseconds === 0)
+    {
+        clearInterval(interval);
+        enterWordsInput.setAttribute('disabled', '');
+    }
+    let minutes = Math.floor(milliseconds / 1000 / 60);
+    let seconds = milliseconds / 1000 % 60;
+    timeSpan.textContent = `${minutes}:${seconds}`;
 }
 
 let wordsDiv = document.querySelector('#words');
@@ -77,9 +96,13 @@ let textFileInput = document.querySelector('#text_file_input');
 let enterWordsInput = document.querySelector('#enter_words');
 let correctWordsCount = document.querySelector('#correct_words_count');
 let incorrectWordsCount = document.querySelector('#incorrect_words_count');
+let startButton = document.querySelector('#start');
+let timeSpan = document.querySelector('#time');
+const defaultMilliseconds = (1 * 60 + 30) * 1000; // minutes * seconds * milliseconds 
+let milliseconds = defaultMilliseconds; 
+let interval;
 
 let wordsArray = [];
-
 
 textFileInput.addEventListener('input', (event) =>
 {
@@ -89,3 +112,4 @@ enterWordsInput.addEventListener('input', (event) =>
 {
     checkInput(event);
 });
+startButton.addEventListener('click', start);

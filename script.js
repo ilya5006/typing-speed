@@ -6,6 +6,8 @@ let start = () =>
     correctWordsCount.textContent = 0;
     incorrectWordsCount.textContent = 0;
 
+    fillWordsDiv();
+
     milliseconds = defaultMilliseconds;
     interval = setInterval(decrementTime, 1000);
 }
@@ -26,27 +28,36 @@ let getWords = async (event) =>
     reader.addEventListener('load', () =>
     {
         let words = reader.result;
-        let wordsArray = words.split(' ');
+        wordsArray = words.split(' ');
 
-        wordsArray.forEach((word) =>
-        {
-            let p = document.createElement('p');
-            p.textContent = word;
-            wordsDiv.insertAdjacentElement('beforeEnd', p);
-        });
-        
-        wordsDiv.querySelector('p').classList.add('highlight');
-
-        if (!document.querySelector('#start'))
-        {
-            let startButton = document.createElement('button');
-            startButton.setAttribute('id', 'start');
-            startButton.textContent = 'Начать';
-            document.body.insertAdjacentElement('beforeEnd', startButton);
-            
-            startButton.addEventListener('click', start);
-        }
+        fillWordsDiv();
     });
+}
+
+let fillWordsDiv = () =>
+{
+    wordsDiv.innerHTML = '';
+    wordsArray.forEach((word) =>
+    {
+        let p = document.createElement('p');
+        p.textContent = word;
+        wordsDiv.insertAdjacentElement('beforeEnd', p);
+    });
+    
+    wordsDiv.querySelector('p').classList.add('highlight');
+}
+
+let addStartButton = () =>
+{
+    if (!document.querySelector('#start'))
+    {
+        let startButton = document.createElement('button');
+        startButton.setAttribute('id', 'start');
+        startButton.textContent = 'Начать';
+        document.body.insertAdjacentElement('beforeEnd', startButton);
+        
+        startButton.addEventListener('click', start);
+    }
 }
 
 let checkInput = (event) =>
@@ -121,10 +132,12 @@ let timeSpan = document.querySelector('#time');
 const defaultMilliseconds = 90 * 1000; // 1 minute 30 seconds
 let milliseconds = defaultMilliseconds; 
 let interval;
+let wordsArray;
 
 textFileInput.addEventListener('input', (event) =>
 {
     getWords(event);
+    addStartButton();
 });
 enterWordsInput.addEventListener('input', (event) =>
 {
